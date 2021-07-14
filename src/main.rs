@@ -16,19 +16,24 @@ impl Board{
     }
 
     fn new_cell_status(&self, x: usize, y: usize) -> bool{
-        let active_neighbors = 0;
-        for i in -1..=1 {  // offset in x direction
-            for j in -1..=1 {
+        let mut active_neighbors = 0;
+        let mut i = -1;
+        let mut j = -1;
+        while i <= 1 {  // offset in x direction
+            while j <= 1 {
                 if i == 0 && j == 0 {  // offset in y direction
                     continue;
                 }
-                if !(x + i < 0 || x + i > self.boardsize_x ||y + j < 0 || y + j > self.boardsize_y) { // don't check outside the board
-                    if self.board[y+j][x+i] {
+                let x_int = x as i32;
+                let y_int = y as i32;
+                if !(x_int + i < 0 || x_int + i > (self.boardsize_x as i32)||y_int + j < 0 || y_int + j > (self.boardsize_y as i32)) { // don't check outside the board
+                    if self.board[y+(j as usize)][x+(i as usize)] {
                         active_neighbors += 1;
                     }
                 }
-
+                j += 1;
             }
+            i += 1;
         }
         if self.board[y][x] {  // if cell is populated
             return !(active_neighbors <= 1 || active_neighbors >= 4);
