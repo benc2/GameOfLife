@@ -17,13 +17,36 @@ impl Board{
     }
 
     fn step(&mut self) {
-        let new_board = self.clone();
+        let mut new_board = self.clone();
         for i in 0..self.boardsize_x {
             for j in 0..self.boardsize_y {
                 new_board[i][j] = self.new_cell_status(i, j);
             }
         }
-        self = new_board;
+        *self = new_board;
+    }
+
+    fn new_cell_status(&self, x: usize, y: usize) -> bool{
+        let active_neighbors = 0;
+        for i in -1..=1 {  // offset in x direction
+            for j in -1..=1 {
+                if i == 0 && j == 0 {  // offset in y direction
+                    continue;
+                }
+                if !(x + i < 0 || x + i > self.boardsize_x ||y + j < 0 || y + j > self.boardsize_y) { // don't check outside the board
+                    if self.board[y+j][x+i] {
+                        active_neighbors += 1;
+                    }
+                }
+
+            }
+        }
+        if self.board[y][x] {  // if cell is populated
+            return !(active_neighbors <= 1 || active_neighbors >= 4);
+        }
+        else{
+            return active_neighbors == 2 || active_neighbors == 3;
+        }
     }
 
 }
